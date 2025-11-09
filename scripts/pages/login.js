@@ -75,17 +75,20 @@ async function login(e) {
     if (!res.ok) {
       const help = getHelper(passwordInput);
       help.textContent = "아이디 또는 비밀번호를 확인하세요.";
-      help.style.visibility = "visible";
+      help.style.display = "block";
       submitBtn.disabled = false;
       submitBtn.style.backgroundColor = "";
       return;
     }
 
+    const data = await res.json();
+    localStorage.setItem("userId", data.result.user_id);
+    localStorage.setItem("userProfileImage", data.result.profile_image);
     location.href = "/articles/list.html";
   } catch (err) {
     const help = getHelper(passwordInput);
     help.textContent = "네트워크 오류: " + err.message;
-    help.style.visibility = "visible";
+    help.style.display = "block";
     submitBtn.disabled = false;
     submitBtn.style.backgroundColor = "";
   }
