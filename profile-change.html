@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>아무말대잔치</title>
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/profile-change.css" />
+  </head>
+  <body>
+    <div id="header"></div>
+
+    <div class="account-edit-wrapper">
+      <h1>회원정보수정</h1>
+
+      <main class="account-edit-container">
+        <form class="account-edit-form" action="/account" method="post" enctype="multipart/form-data">
+          <div class="form-field">
+            <label for="profile-image">프로필 사진*</label>
+
+            <input type="file" id="profile-image" name="profileImage" accept="image/*" class="visually-hidden" />
+
+            <label for="profile-image" class="c-avatar-picker" aria-label="프로필 사진 변경">
+              <img id="profile-preview" alt="" />
+              <span class="c-avatar-picker__badge">변경</span>
+            </label>
+          </div>
+
+          <div class="form-field">
+            <label>이메일</label>
+            <div class="static-text" id="email-static">email@email.com</div>
+          </div>
+
+          <div class="form-field">
+            <label for="nickname">닉네임</label>
+            <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요" required />
+            <small class="field-error-message">* helper text</small>
+          </div>
+
+          <button type="submit">수정하기</button>
+          <button type="button" class="text-button" id="account-delete">회원 탈퇴</button>
+        </form>
+      </main>
+    </div>
+  </body>
+</html>
