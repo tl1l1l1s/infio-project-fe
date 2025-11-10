@@ -1,120 +1,127 @@
 .join-wrapper {
+  min-height: calc(100dvh - 60px);
+  box-sizing: border-box;
   display: flex;
-  min-height: 95vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-bottom: 24px;
   color: #111;
+}
 
-  h1 {
-    margin-bottom: 24px;
-  }
+h1 {
+  margin: 24px 0;
+}
+
+.field-error-message {
+  display: none;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #d04b4b;
 }
 
 .join-container {
-  width: 30%;
+  width: 40%;
+}
 
-  .field-error-message {
-    margin-top: 6px;
-    font-size: 12px;
-    color: #d04b4b;
+form {
+  display: flex;
+  flex-direction: column;
+
+  :first-child {
+    margin-bottom: 0;
   }
 
-  form {
+  .profile-image-container {
+    text-align: left;
     display: flex;
     flex-direction: column;
+    align-items: center;
 
-    .profile-image-container {
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .profile-image-input {
-        position: absolute !important;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-
-      .profile-image-label {
-        width: 160px;
-        height: 160px;
-        border-radius: 50%;
-        background: #cfcfcf;
-        display: grid;
-        place-items: center;
-        cursor: pointer;
-        overflow: hidden;
-        position: relative;
-        transition: filter 0.15s ease-in-out, transform 0.05s ease-in-out;
-      }
-
-      .profile-image-label::after {
-        content: "+";
-        font-weight: lighter;
-        font-size: 48px;
-      }
-
-      .profile-image-label:hover {
-        filter: brightness(0.95);
-      }
-      .profile-image-label:active {
-        transform: scale(0.98);
-      }
-
-      .profile-image-label img {
-        display: none;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .profile-image-label.has-image::after {
-        content: "";
-      }
-      .profile-image-label.has-image img {
-        display: block;
-      }
+    .profile-image-input {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
-    label {
-      font-weight: bold;
-      margin-top: 20px;
-      margin-bottom: 6px;
-    }
-
-    input {
-      width: 100%;
-      height: 44px;
-      padding: 10px 12px;
-      border: 1px solid;
-      border-radius: 8px;
-      background: #fff;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    button {
-      display: inline-block;
-      width: 100%;
-      height: 44px;
-      margin-top: 12px;
-      background-color: rgb(170, 160, 230);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
+    .profile-image-label {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: #cfcfcf;
+      display: grid;
+      place-items: center;
       cursor: pointer;
+      overflow: hidden;
+      position: relative;
+      transition: filter 0.15s ease-in-out, transform 0.05s ease-in-out;
+    }
 
-      &:hover {
-        background-color: rgb(150, 140, 210);
-      }
+    .profile-image-label::after {
+      content: "+";
+      font-weight: lighter;
+      font-size: 48px;
+    }
+
+    .profile-image-label:hover {
+      filter: brightness(0.95);
+    }
+    .profile-image-label:active {
+      transform: scale(0.98);
+    }
+
+    .profile-image-label img {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-image-label.has-image::after {
+      content: "";
+    }
+    .profile-image-label.has-image img {
+      display: block;
+    }
+  }
+
+  label {
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 6px;
+  }
+
+  input {
+    width: 100%;
+    height: 44px;
+    padding: 10px 12px;
+    border: 1px solid;
+    border-radius: 8px;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  button {
+    display: inline-block;
+    width: 100%;
+    height: 44px;
+    margin-top: 12px;
+    background-color: rgb(170, 160, 230);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgb(150, 140, 210);
     }
   }
 }

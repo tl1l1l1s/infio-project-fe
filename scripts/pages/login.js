@@ -7,7 +7,7 @@ const emailInput = form?.querySelector("#email");
 const passwordInput = form?.querySelector("#password");
 const submitBtn = form?.querySelector('button[type="submit"]');
 
-function getHelper(input) {
+function getErrorMessageElement(input) {
   let el = input.nextElementSibling;
   if (!el || !el.classList.contains("field-error-message")) {
     el = document.createElement("small");
@@ -19,13 +19,13 @@ function getHelper(input) {
 }
 
 function validateField(input) {
-  const help = getHelper(input);
+  const help = getErrorMessageElement(input);
   help.style.display = "none";
 
   if (input === emailInput) {
     const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
     if (!ok) {
-      help.textContent = "유효한 이메일을 입력하세요.";
+      help.textContent = "올바른 이메일 주소 형식을 입력해주세요. (예: example@example.com)";
       help.style.display = "block";
       return false;
     }
@@ -38,8 +38,9 @@ function validateField(input) {
       help.style.display = "block";
       return false;
     }
-    if (v.length < 8 || v.length > 20) {
-      help.textContent = "비밀번호는 8~20자여야 합니다.";
+    if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,20}$/.test(v)) {
+      help.textContent =
+        "비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.";
       help.style.display = "block";
       return false;
     }
@@ -57,7 +58,7 @@ async function login(e) {
   e.preventDefault();
   if (!validateAll()) return;
 
-  submitBtn.style.backgroundColor = "rgb(150, 140, 210)";
+  submitBtn.style.backgroundColor = "#7F6AEE";
   submitBtn.disabled = true;
 
   const payload = {
@@ -73,7 +74,7 @@ async function login(e) {
     });
 
     if (!res.ok) {
-      const help = getHelper(passwordInput);
+      const help = getErrorMessageElement(passwordInput);
       help.textContent = "아이디 또는 비밀번호를 확인하세요.";
       help.style.display = "block";
       submitBtn.disabled = false;
@@ -84,9 +85,9 @@ async function login(e) {
     const data = await res.json();
     localStorage.setItem("userId", data.result.user_id);
     localStorage.setItem("userProfileImage", data.result.profile_image);
-    location.href = "/articles/list.html";
+    location.href = "/index.html";
   } catch (err) {
-    const help = getHelper(passwordInput);
+    const help = getErrorMessageElement(passwordInput);
     help.textContent = "네트워크 오류: " + err.message;
     help.style.display = "block";
     submitBtn.disabled = false;
