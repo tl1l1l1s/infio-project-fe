@@ -1,8 +1,19 @@
 <header class="header-wrapper">
   <div class="header-container">
-    <button class="header-back" aria-label="뒤로 가기"><</button>
-    <h1 class="header-title">아무 말 대잔치</h1>
-    <div class="header-profile" aria-hidden="true"></div>
+    <button class="header-back" type="button" aria-label="뒤로 가기">
+      <span><</span>
+    </button>
+    <a class="header-title" href="/">아무 말 대잔치</a>
+    <div class="header-actions">
+      <button class="header-profile">
+        <span class="header-profile-image"></span>
+      </button>
+      <div class="header-menu" role="menu">
+        <a class="header-menu-item" href="/profile-change.html">회원정보수정</a>
+        <a class="header-menu-item" href="/password-change.html">비밀번호수정</a>
+        <button class="header-menu-item header-menu-item-button">로그아웃</button>
+      </div>
+    </div>
   </div>
 </header>
 <hr class="header-divider" />
