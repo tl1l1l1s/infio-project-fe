@@ -1,3 +1,5 @@
+import { showToast } from "../components/toast.js";
+
 export function getErrorMessageElement(input) {
   let el = input.nextElementSibling;
   if (!el || !el.classList.contains("field-error-message")) {
@@ -90,7 +92,6 @@ function setupProfileMenu() {
     if (isMenuOpen) return;
     isMenuOpen = true;
     menu.classList.add("is-open");
-    console.log(menu + " " + menu.classList);
     document.addEventListener("click", handleDocumentClick);
   }
 
@@ -118,8 +119,9 @@ function setupProfileMenu() {
   if (logoutBtn) {
     logoutBtn.addEventListener("click", (event) => {
       event.preventDefault();
+      localStorage.clear();
+      location.replace("/login.html");
       closeMenu();
-      // TODO: 로그아웃 모달 연결
     });
   }
 }

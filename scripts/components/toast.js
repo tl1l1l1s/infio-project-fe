@@ -5,8 +5,6 @@ function createToastContainer() {
   if (toastContainer) return toastContainer;
   toastContainer = document.createElement("div");
   toastContainer.className = "toast-container";
-  toastContainer.setAttribute("role", "status");
-  toastContainer.setAttribute("aria-live", "polite");
   document.body.appendChild(toastContainer);
   return toastContainer;
 }

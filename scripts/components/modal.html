@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <link rel="stylesheet" href="./styles/global.css" />
+  </head>
+  <body>
+    <div class="modal-wrapper" id="confirm-modal" aria-hidden="true">
+      <div
+        class="modal-container"
+        aria-modal="true"
+        aria-labelledby="confirm-modal-title"
+        aria-describedby="confirm-modal-message"
+      >
+        <h2 class="modal-title" id="confirm-modal-title">제목</h2>
+        <p class="modal-message" id="confirm-modal-message">메시지</p>
+
+        <div class="modal-actions">
+          <button type="button" class="modal-button modal-button-cancel" id="confirm-modal-cancel">취소</button>
+          <button type="button" class="modal-button modal-button-confirm" id="confirm-modal-confirm">확인</button>
+        </div>
+
+        <span tabindex="0" id="confirm-modal-sentinel-end" class="visually-hidden"></span>
+      </div>
+      <span tabindex="0" id="confirm-modal-sentinel-start" class="visually-hidden"></span>
+    </div>
+  </body>
+</html>

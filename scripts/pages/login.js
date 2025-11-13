@@ -84,7 +84,7 @@ function main() {
       location.href = "/index.html";
     } catch (err) {
       const help = getErrorMessageElement(passwordInput);
-      help.textContent = "네트워크 오류: " + err.message;
+      help.textContent = "네트워크 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.";
       help.style.display = "block";
       submitBtn.disabled = false;
       submitBtn.style.backgroundColor = "";

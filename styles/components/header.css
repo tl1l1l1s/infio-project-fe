@@ -40,7 +40,6 @@
 }
 
 .header-actions {
-  visibility: hidden;
   position: relative;
   align-items: center;
   gap: 8px;

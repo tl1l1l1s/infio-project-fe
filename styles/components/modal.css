@@ -1,0 +1,87 @@
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.modal-wrapper {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 999;
+  padding: 24px;
+}
+.modal-wrapper.is-open {
+  display: flex;
+}
+
+.modal-container {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 32px 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  color: #111;
+}
+
+.modal-title {
+  margin: 16px 0;
+  font-size: 20px;
+  font-weight: 8800;
+  text-align: center;
+}
+
+.modal-message {
+  margin: 0 0 28px 0;
+  font-size: 18px;
+  text-align: center;
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.modal-button {
+  height: 48px;
+  margin: 0 12px;
+  border: none;
+  border-radius: 18px;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.02s, background-color 0.15s;
+}
+
+.modal-button-cancel {
+  background: rgb(31, 31, 31);
+  color: #fff;
+}
+
+.modal-button-cancel:hover {
+  background: rgb(11, 11, 11);
+}
+
+.modal-button-confirm {
+  background: rgb(170, 160, 230);
+  color: #fff;
+}
+
+.modal-button-confirm:hover {
+  background: rgb(150, 140, 210);
+}
+
+.modal-button:active {
+  transform: scale(0.996);
+}
