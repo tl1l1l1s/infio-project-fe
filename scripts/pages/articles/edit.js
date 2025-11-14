@@ -1,4 +1,4 @@
-import { fetchHeader } from "../../utils/dom.js";
+import { fetchHeader, getErrorMessageElement } from "../../utils/dom.js";
 import { getUserId } from "../../utils/auth.js";
 import { api } from "../../utils/api.js";
 
@@ -17,6 +17,7 @@ function main() {
   const form = document.querySelector(".article-edit-form");
   const titleInput = document.getElementById("title");
   const contentInput = document.getElementById("content");
+  const formMessageEl = getErrorMessageElement(contentInput);
   const imageInput = document.getElementById("image");
   const submitBtn = form?.querySelector('button[type="submit"]');
 
@@ -62,7 +63,6 @@ function main() {
     const payload = {
       title: titleInput.value.trim(),
       content: contentInput.value.trim(),
-      article_image: articleImage || "",
     };
 
     formMessageEl.textContent = "";
@@ -71,8 +71,9 @@ function main() {
     }
 
     try {
-      await api.patch(`/articles/${articleId}`, { params: { userId }, body: payload });
-      location.href = `/articles/detail.html?articleId=${articleId}`;
+      const res = await api.patch(`/articles/${articleId}`, { params: { userId }, body: payload });
+
+      location.replace(`/articles/detail.html?articleId=${articleId}`);
     } catch (err) {
       formMessageEl.textContent = err.message || "네트워크 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.";
     } finally {

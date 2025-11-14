@@ -19,9 +19,6 @@ function main() {
   const commentTextarea = document.getElementById("comment-content");
   let commentErrorEl;
   const commentSubmitBtn = document.getElementById("comment-submit");
-  if (commentSubmitBtn) {
-    commentSubmitBtn.disabled = true;
-  }
   let commentObserver;
   let commentSentinelEl;
   let commentStateEl;
@@ -203,10 +200,9 @@ function main() {
   async function handleToggleLike() {
     if (likeThrottle) return;
     likeThrottle = true;
-
     try {
       if (isLiked) {
-        await api.del(`/articles/${articleId}/likes`, { params: { userId } });
+        await api.delete(`/articles/${articleId}/likes`, { params: { userId } });
         likeCount = Math.max(0, likeCount - 1);
         isLiked = false;
       } else {
@@ -220,7 +216,7 @@ function main() {
     } finally {
       setTimeout(() => {
         likeThrottle = false;
-      }, 600);
+      }, 1000);
     }
   }
 
@@ -308,7 +304,10 @@ function main() {
   }
 
   function bindCommentForm() {
-    if (!commentForm || !commentTextarea) return;
+    if (!commentForm || !commentTextarea) {
+      return;
+    }
+
     commentForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const content = commentTextarea.value.trim();
@@ -321,8 +320,6 @@ function main() {
 
       setCommentError("");
       if (commentSubmitBtn) commentSubmitBtn.disabled = true;
-      const submitBtn = commentForm.querySelector('button[type="submit"]');
-      if (submitBtn) submitBtn.disabled = true;
 
       try {
         const isEditing = Boolean(editingCommentId);
@@ -344,7 +341,7 @@ function main() {
       } catch (err) {
         setCommentError(err.message || "댓글 등록에 실패했습니다.");
       } finally {
-        if (submitBtn) submitBtn.disabled = false;
+        commentSubmitBtn.disabled = false;
       }
     });
   }
@@ -545,12 +542,12 @@ function createCommentItem(comment, options = {}) {
 
   const nameEl = document.createElement("span");
   nameEl.className = "name";
-  nameEl.textContent = comment?.writtenBy?.nickname || "익명";
+  nameEl.textContent = comment?.writtenBy?.nickname;
 
   const timeEl = document.createElement("time");
   timeEl.className = "time";
   const createdAt = comment?.createdAt ?? comment?.created_at;
-  timeEl.dateTime = createdAt || "";
+  timeEl.dateTime = createdAt;
   timeEl.textContent = createdAt ? formatDate(createdAt) : "";
 
   meta.append(nameEl, timeEl);
