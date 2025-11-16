@@ -1,10 +1,11 @@
-import { fetchHeader, getErrorMessageElement } from "../utils/dom.js";
+import { fetchHeader, fetchFooter, getErrorMessageElement } from "../utils/dom.js";
 import { api } from "../utils/api.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
 function main() {
   fetchHeader();
+  fetchFooter();
 
   const form = document.querySelector('form[action="/login"]');
   const emailInput = document.getElementById("email");
