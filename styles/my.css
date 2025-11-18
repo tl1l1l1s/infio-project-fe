@@ -1,0 +1,135 @@
+.my-wrapper {
+  width: 100%;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 48px 0;
+}
+
+.my-container {
+  width: 75%;
+  padding: 0 12px;
+}
+
+.profile-container {
+  padding: 0 24px;
+  gap: 8px;
+}
+
+.profile-container img {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #d1d5db;
+  object-fit: cover;
+  margin-bottom: 18px;
+}
+
+.profile-container h3 {
+  margin: 8px 0;
+  font-size: 24px;
+}
+
+.profile-container p {
+  margin: 0;
+  color: #6b7280;
+}
+
+.my-articles-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.my-articles-tab-container {
+  display: flex;
+  margin: 12px 8px;
+  gap: 12px;
+}
+
+.my-articles-tab {
+  width: 50%;
+  text-align: center;
+  padding: 10px 18px;
+  border: none;
+  border-bottom: 1px solid #d9dde3;
+  cursor: pointer;
+}
+
+.my-articles-tab.is-active {
+  border-color: rgb(170, 160, 230);
+  color: #5542c1;
+}
+
+.my-articles-list-container {
+  display: grid;
+  gap: 16px;
+}
+
+.my-article {
+  width: 100%;
+  background: #fbfdff;
+  border: 1px solid #e6e8eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.04);
+  cursor: pointer;
+}
+
+.my-article:hover {
+  border: 1px solid #9aa6b2;
+}
+
+.my-article .card-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.my-article .theme {
+  display: inline-block;
+  font-size: 15px;
+  padding: 0px 8px;
+  background-color: #c3e8fb;
+  border: 1px solid #c3e8fb;
+  border-radius: 24px;
+  margin-bottom: 12px;
+}
+
+.my-article .card-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.my-article .card-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.my-article .card-time {
+  color: #6b7280;
+  white-space: nowrap;
+  margin-left: 4px;
+}
+
+.my-article .card-stats {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.my-article .card-stats span {
+  display: flex;
+  align-items: center;
+}
+
+.my-article .card-stats img {
+  width: 16px;
+  margin-right: 6px;
+}

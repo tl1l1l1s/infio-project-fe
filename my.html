@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/my.css" />
+    <script type="module" src="./scripts/pages/my.js"></script>
+  </head>
+  <div id="header"></div>
+
+  <body>
+    <div class="my-wrapper">
+      <div class="my-container">
+        <div class="profile-container">
+          <img />
+          <h3>닉네임</h3>
+          <p>가입일: 2025.11.18</p>
+        </div>
+        <div class="my-articles-container">
+          <div class="my-articles-tab-container">
+            <div class="my-articles-tab">작성한 게시글</div>
+            <div class="my-articles-tab">북마크한 게시글</div>
+          </div>
+
+          <div class="my-articles-list-container">
+            <div class="my-article">
+              <div class="theme">React</div>
+              <h2 class="card-title">제목</h2>
+
+              <div class="card-meta">
+                <div class="card-author">
+                  <span class="name">작성자</span>
+                  <time class="card-time" datetime="2021-01-01T00:00:00">2021-01-01 00:00:00</time>
+                </div>
+                <div class="card-stats">
+                  <span> <img src="./assets/images/heart.svg" />0</span>
+                  <span> <img src="./assets/images/message-square.svg" />0</span>
+                  <span> <img src="./assets/images/eye.svg" />0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <div id="footer"></div>
+</html>

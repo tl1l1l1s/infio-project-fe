@@ -41,9 +41,17 @@
 
 .trending-article-list {
   width: 35%;
+  margin-top: 12px;
+}
 
-  h3 {
-    margin: 0 0 24px 6px;
+.trending-article-title {
+  display: flex;
+  align-items: center;
+  margin: 0 0 24px 6px;
+  gap: 12px;
+
+  img {
+    width: 24px;
   }
 }
 
