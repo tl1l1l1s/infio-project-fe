@@ -22,15 +22,22 @@
           <div class="join-field">
             <label for="email">이메일*</label>
             <div class="email">
-              <input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required />
-              <button>인증 번호 발송</button>
+              <input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required data-error-id="email-error" />
+              <button type="button" id="send-email-code">인증 번호 발송</button>
             </div>
-            <small class="field-error-message"></small>
-            <div class="email-verify">
-              <input type="number" id="email-verify" name="email-verify" placeholder="인증번호를 입력하세요" required />
-              <button>인증 확인</button>
+            <small id="email-error" class="field-error-message"></small>
+            <div class="email-verify" id="email-verify-section">
+              <input
+                type="number"
+                id="email-verify"
+                name="email-verify"
+                placeholder="인증번호를 입력하세요"
+                data-error-id="email-verify-error"
+                disabled
+              />
+              <button type="button" id="email-verify-button">인증 확인</button>
             </div>
-            <small class="field-error-message"></small>
+            <small id="email-verify-error" class="field-error-message"></small>
           </div>
           <div class="join-field password">
             <label for="password">비밀번호*</label>

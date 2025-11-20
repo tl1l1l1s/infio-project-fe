@@ -1,5 +1,5 @@
 .login-wrapper {
-  min-height: 85vh;
+  min-height: 83vh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -8,13 +8,17 @@
 
   h1 {
     font-size: 24px;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
+  }
+
+  span {
+    margin-bottom: 18px;
   }
 }
 
 .login-container {
   width: 40%;
-  margin-top: 24px;
+  margin: 24px 0;
   padding: 24px 32px;
   border: 1px solid rgb(221, 224, 230);
   border-radius: 12px;
