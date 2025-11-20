@@ -46,9 +46,13 @@
             <small class="field-error-message"></small>
           </div>
 
-          <div class="form-field">
+          <div class="form-field image-upload-field">
             <label for="image">이미지</label>
             <input type="file" id="image" name="image" accept="image/*" />
+            <div class="article-image-preview" id="article-image-preview">
+              <img id="article-image-preview-img" alt="이미지 미리보기" />
+              <button type="button" class="image-remove-button" id="article-image-remove">이미지 삭제</button>
+            </div>
           </div>
 
           <div class="buttons">

@@ -1,6 +1,7 @@
 import { fetchFooter, fetchHeader, getErrorMessageElement } from "../../utils/dom.js";
 import { getUserId } from "../../utils/auth.js";
 import { api } from "../../utils/api.js";
+import { resolveImageUrl } from "../../utils/image.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
@@ -15,17 +16,26 @@ function main() {
     return;
   }
 
-  const form = document.querySelector(".article-edit-form");
+  const form = document.querySelector(".article-form");
   const titleInput = document.getElementById("title");
   const contentInput = document.getElementById("content");
   const formMessageEl = getErrorMessageElement(contentInput);
   const imageInput = document.getElementById("image");
+  const imagePreviewWrapper = document.getElementById("article-image-preview");
+  const imagePreviewImg = document.getElementById("article-image-preview-img");
+  const imageRemoveBtn = document.getElementById("article-image-remove");
   const submitBtn = form?.querySelector('button[type="submit"]');
+  const cancelBtn = document.querySelector(".article-form .cancel");
 
   if (!form || !titleInput || !contentInput || !imageInput) return;
 
   let originalImageUrl = "";
+  let selectedImageFile = null;
+  let removeImage = false;
 
+  cancelBtn?.addEventListener("click", handleCancel);
+  imageInput?.addEventListener("change", handleImageChange);
+  imageRemoveBtn?.addEventListener("click", handleRemoveImage);
   setFormDisabled(true);
   loadArticle();
   form.addEventListener("submit", handleSubmit);
@@ -45,6 +55,8 @@ function main() {
       titleInput.value = article?.title;
       contentInput.value = article?.content;
       originalImageUrl = article?.article_image ?? "";
+      updateImagePreview(originalImageUrl);
+      removeImage = false;
       form.setAttribute("articleId", article?.article_id ?? "");
       formMessageEl.textContent = "";
     } catch (err) {
@@ -64,7 +76,13 @@ function main() {
     const payload = {
       title: titleInput.value.trim(),
       content: contentInput.value.trim(),
+      article_image: removeImage ? "" : originalImageUrl || "",
     };
+    const formData = new FormData();
+    formData.append("payload", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+    if (selectedImageFile) {
+      formData.append("image", selectedImageFile);
+    }
 
     formMessageEl.textContent = "";
     if (submitBtn) {
@@ -72,7 +90,7 @@ function main() {
     }
 
     try {
-      const res = await api.patch(`/articles/${articleId}`, { params: { userId }, body: payload });
+      await api.patch(`/articles/${articleId}`, { params: { userId }, body: formData });
 
       location.replace(`/articles/detail.html?articleId=${articleId}`);
     } catch (err) {
@@ -125,4 +143,59 @@ function main() {
       el.disabled = disabled;
     });
   }
+
+  function handleCancel() {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else if (articleId) {
+      location.replace(`/articles/detail.html?articleId=${articleId}`);
+    } else {
+      location.replace("/index.html");
+    }
+  }
+
+  function handleImageChange(event) {
+    const file = event.target.files?.[0];
+    selectedImageFile = file || null;
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      updateImagePreview(previewUrl);
+      removeImage = false;
+    } else {
+      updateImagePreview(originalImageUrl);
+    }
+  }
+
+  function handleRemoveImage() {
+    selectedImageFile = null;
+    removeImage = true;
+    originalImageUrl = "";
+    if (imageInput) {
+      imageInput.value = "";
+    }
+    updateImagePreview("");
+  }
+
+  function updateImagePreview(src) {
+    if (!imagePreviewWrapper || !imagePreviewImg) return;
+    if (src) {
+      imagePreviewImg.src = src;
+      imagePreviewWrapper.classList.add("is-visible");
+    } else {
+      imagePreviewImg.removeAttribute("src");
+      imagePreviewWrapper.classList.remove("is-visible");
+    }
+  }
 }
+  function updateImagePreview(src) {
+    if (!imagePreviewWrapper || !imagePreviewImg) return;
+    const shouldResolve = src && !src.startsWith("blob:") && !src.startsWith("data:");
+    const resolved = shouldResolve ? resolveImageUrl(src) : src;
+    if (resolved) {
+      imagePreviewImg.src = resolved;
+      imagePreviewWrapper.classList.add("is-visible");
+    } else {
+      imagePreviewImg.removeAttribute("src");
+      imagePreviewWrapper.classList.remove("is-visible");
+    }
+  }

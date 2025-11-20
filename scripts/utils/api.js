@@ -1,17 +1,19 @@
-const API_BASE_URL = "http://localhost:8080";
+export const API_BASE_URL = "http://localhost:8080";
 
 async function request(method, path, { params, body, headers } = {}) {
   const url = buildUrl(path, params);
+  const isFormData = body instanceof FormData;
+
   const options = {
     method,
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...headers,
     },
   };
 
   if (body !== undefined) {
-    options.body = typeof body === "string" ? body : JSON.stringify(body);
+    options.body = typeof body === "string" || isFormData ? body : JSON.stringify(body);
   }
 
   const res = await fetch(url, options);

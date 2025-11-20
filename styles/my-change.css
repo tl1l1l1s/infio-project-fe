@@ -114,6 +114,17 @@
   border-radius: 99px;
 }
 
+.profile-image-remove {
+  margin-top: 10px;
+  align-self: center;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+}
+
 .form-actions {
   display: flex;
   gap: 12px;

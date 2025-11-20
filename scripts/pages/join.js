@@ -10,10 +10,13 @@ function main() {
   const form = document.querySelector('form[action="/join"]');
   const profileImageInput = document.getElementById("profile-image");
   const emailInput = document.getElementById("email");
+  const emailVerifyInput = document.getElementById("email-verify");
   const passwordInput = document.getElementById("password");
   const passwordConfirmInput = document.getElementById("confirm-password");
   const nicknameInput = document.getElementById("nickname");
   const submitBtn = form?.querySelector('button[type="submit"]');
+  const sendCodeBtn = document.getElementById("send-email-code");
+  const verifySection = document.getElementById("email-verify-section");
 
   function validateField(input) {
     showErrorMessageElement(input, "").style.display = "none";
@@ -128,11 +131,27 @@ function main() {
   passwordInput.addEventListener("blur", () => validateField(passwordInput));
   passwordConfirmInput.addEventListener("blur", () => validateField(passwordConfirmInput));
   nicknameInput.addEventListener("blur", () => validateField(nicknameInput));
+  sendCodeBtn?.addEventListener("click", handleSendCode);
+
+  function handleSendCode() {
+    if (!validateField(emailInput)) return;
+    verifySection?.classList.add("is-visible");
+    if (emailVerifyInput) {
+      emailVerifyInput.disabled = false;
+    }
+  }
 }
 
 function showErrorMessageElement(input, message) {
-  let el = getErrorMessageElement(input);
+  const targetId = input?.dataset?.errorId;
+  let el = null;
+  if (targetId) {
+    el = document.getElementById(targetId);
+  }
+  if (!el) {
+    el = getErrorMessageElement(input);
+  }
   el.textContent = message;
-  el.style.display = "block";
+  el.style.display = message ? "block" : "none";
   return el;
 }

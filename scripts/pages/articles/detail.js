@@ -4,6 +4,7 @@ import { formatDate, formatCount } from "../../utils/format.js";
 import { showToast } from "../../components/toast.js";
 import { api } from "../../utils/api.js";
 import { confirmModal } from "../../components/modal.js";
+import { resolveImageUrl } from "../../utils/image.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
@@ -61,7 +62,7 @@ function main() {
       const data = await api.get(`/articles/${articleId}`);
       renderArticle(data.result);
     } catch (err) {
-      showGlobalMessage(err.message || "게시글을 불러오지 못했습니다.");
+      showToast(err.message || "게시글을 불러오지 못했습니다.", { type: "error" });
       disableDetailInteractions();
     }
   }
@@ -121,8 +122,10 @@ function main() {
     const cover = document.querySelector(".post-cover");
     if (!image || !cover) return;
 
-    if (imageUrl) {
-      image.src = imageUrl;
+    const resolvedUrl = resolveImageUrl(imageUrl);
+
+    if (resolvedUrl) {
+      image.src = resolvedUrl;
       image.alt = "게시글 이미지";
       image.style.display = "block";
       cover.style.background = "transparent";
@@ -208,7 +211,7 @@ function main() {
         if (!ok) return;
 
         try {
-          await api.del(`/articles/${articleId}`, { params: { userId } });
+          await api.delete(`/articles/${articleId}`, { params: { userId } });
           location.replace("/index.html");
         } catch (err) {
           showToast(err.message || "게시글 삭제에 실패했습니다.");
@@ -232,7 +235,7 @@ function main() {
       }
       updateLikeButtonAppearance();
     } catch (err) {
-      // TODO: 좋아요 처리 실패
+      showToast("좋아요 처리에 실패했습니다. 잠시 후 다시 시도해주세요.", { type: "error" });
     } finally {
       setTimeout(() => {
         likeThrottle = false;
@@ -361,9 +364,14 @@ function main() {
 
         commentTextarea.value = "";
         resetCommentFormState();
+        const successMessage = isEditing ? "댓글 수정 완료" : "댓글 등록 완료";
+        showToast(successMessage);
         await loadComments(true);
       } catch (err) {
-        setCommentError(err.message || "댓글 등록에 실패했습니다.");
+        const errorMessage = editingCommentId
+          ? "댓글 수정에 실패했습니다. 잠시 후 다시 시도해주세요."
+          : "댓글 등록에 실패했습니다. 잠시 후 다시 시도해주세요.";
+        showToast(err.message || errorMessage, { type: "error" });
       } finally {
         commentSubmitBtn.disabled = false;
       }
@@ -427,9 +435,10 @@ function main() {
       if (editingCommentId === commentId) {
         resetCommentFormState();
       }
+      showToast("댓글 삭제 완료");
       await loadComments(true);
     } catch (err) {
-      // TODO: 댓글 삭제 처리에 실패했습니다
+      showToast(err.message || "댓글 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.", { type: "error" });
     }
   }
 
@@ -563,10 +572,8 @@ function main() {
     closeAllDropdowns(dropdownEl);
     if (isOpen) {
       dropdownEl.classList.remove("is-open");
-      toggleEl.setAttribute("aria-expanded", "false");
     } else {
       dropdownEl.classList.add("is-open");
-      toggleEl.setAttribute("aria-expanded", "true");
     }
   }
 
@@ -574,10 +581,6 @@ function main() {
     document.querySelectorAll(".post-action-dropdown.is-open").forEach((dropdown) => {
       if (dropdown !== exceptDropdown) {
         dropdown.classList.remove("is-open");
-        const toggle = dropdown.previousElementSibling;
-        if (toggle?.classList.contains("post-action-toggle")) {
-          toggle.setAttribute("aria-expanded", "false");
-        }
       }
     });
   }
@@ -625,8 +628,6 @@ function createCommentItem(comment, options = {}) {
     const toggleButton = document.createElement("button");
     toggleButton.type = "button";
     toggleButton.className = "post-action-toggle";
-    toggleButton.setAttribute("aria-haspopup", "true");
-    toggleButton.setAttribute("aria-expanded", "false");
 
     const toggleIcon = document.createElement("img");
     toggleIcon.src = "../assets/images/more-vertical.svg";
@@ -664,20 +665,11 @@ function createCommentItem(comment, options = {}) {
   return item;
 }
 
-function showGlobalMessage(message) {
-  const container = document.querySelector(".article-detail-container");
-  if (!container) return;
-
-  const info = document.createElement("p");
-  info.className = "article-error-message";
-  info.textContent = message;
-  container.prepend(info);
-}
-
 function setAvatarImage(target, imageUrl) {
   if (!target) return;
-  if (imageUrl) {
-    target.style.backgroundImage = `url("${imageUrl}")`;
+  const resolved = resolveImageUrl(imageUrl);
+  if (resolved) {
+    target.style.backgroundImage = `url("${resolved}")`;
     target.style.backgroundSize = "cover";
     target.style.backgroundPosition = "center";
   } else {
