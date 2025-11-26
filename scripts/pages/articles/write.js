@@ -1,12 +1,13 @@
 import { fetchFooter, fetchHeader, getErrorMessageElement } from "../../utils/dom.js";
-import { getUserId } from "../../utils/auth.js";
+import { requireUser } from "../../utils/auth.js";
 import { api } from "../../utils/api.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
-function main() {
+async function main() {
   fetchHeader();
   fetchFooter();
+  await requireUser();
 
   const form = document.querySelector(".article-form");
   const titleInput = document.getElementById("title");
@@ -50,8 +51,6 @@ function main() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const userId = getUserId();
-
     if (!validateField(titleInput) || !validateField(contentInput)) {
       return;
     }
@@ -68,7 +67,7 @@ function main() {
     }
 
     try {
-      await api.post("/articles", { params: { userId }, body: formData });
+      await api.post("/articles", { body: formData });
       location.href = "/index.html";
     } catch (err) {
       help.textContent = err.message || "네트워크 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.";

@@ -1,15 +1,13 @@
-import { getUserId } from "../../utils/auth.js";
 import { fetchFooter, fetchHeader } from "../../utils/dom.js";
 import { formatDate, formatCount } from "../../utils/format.js";
 import { api } from "../../utils/api.js";
-import { resolveImageUrl } from "../../utils/image.js";
+import { applyAvatarBackground } from "../../utils/image.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
 function main() {
   fetchHeader();
   fetchFooter();
-  getUserId();
 
   const ARTICLE_PAGE_SIZE = 7;
   const articleListEl = document.querySelector(".article-list");
@@ -184,7 +182,7 @@ function main() {
 
       const avatar = document.createElement("span");
       avatar.className = "avatar";
-      setAvatarImage(avatar, article?.writtenBy?.profile_image ?? article?.writtenBy?.profileImage);
+      applyAvatarBackground(avatar, article?.writtenBy?.profile_image ?? article?.writtenBy?.profileImage);
 
       const name = document.createElement("span");
       name.className = "name";
@@ -204,16 +202,4 @@ function main() {
 function goToDetail(articleId) {
   if (!articleId) return;
   location.href = `/articles/detail.html?articleId=${articleId}`;
-}
-
-function setAvatarImage(target, imageUrl) {
-  if (!target) return;
-  const resolved = resolveImageUrl(imageUrl);
-  if (resolved) {
-    target.style.backgroundImage = `url("${resolved}")`;
-    target.style.backgroundSize = "cover";
-    target.style.backgroundPosition = "center";
-  } else {
-    target.style.removeProperty("background-image");
-  }
 }

@@ -10,6 +10,7 @@ async function request(method, path, { params, body, headers } = {}) {
       ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...headers,
     },
+    credentials: "include",
   };
 
   if (body !== undefined) {

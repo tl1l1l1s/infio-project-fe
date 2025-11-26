@@ -1,14 +1,15 @@
 import { fetchFooter, fetchHeader, getErrorMessageElement } from "../../utils/dom.js";
-import { getUserId } from "../../utils/auth.js";
+import { requireUser } from "../../utils/auth.js";
 import { api } from "../../utils/api.js";
 import { resolveImageUrl } from "../../utils/image.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
-function main() {
+async function main() {
   fetchHeader();
   fetchFooter();
-  const userId = getUserId();
+  const currentUser = await requireUser();
+  const currentUserId = currentUser?.user_id ?? currentUser?.userId;
 
   const articleId = new URLSearchParams(location.search).get("articleId");
   if (!articleId) {
@@ -47,7 +48,7 @@ function main() {
       const data = await api.get(`/articles/${articleId}`);
       const article = data?.result;
       const writerId = article?.writtenBy?.user_id ?? article?.writtenBy?.userId;
-      if (String(writerId ?? "") !== String(userId)) {
+      if (String(writerId ?? "") !== String(currentUserId)) {
         location.replace(`/articles/detail.html?articleId=${articleId}`);
         return;
       }
@@ -90,7 +91,7 @@ function main() {
     }
 
     try {
-      await api.patch(`/articles/${articleId}`, { params: { userId }, body: formData });
+      await api.patch(`/articles/${articleId}`, { body: formData });
 
       location.replace(`/articles/detail.html?articleId=${articleId}`);
     } catch (err) {

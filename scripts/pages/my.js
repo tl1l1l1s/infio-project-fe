@@ -1,16 +1,17 @@
 import { fetchHeader, fetchFooter } from "../utils/dom.js";
-import { getUserId } from "../utils/auth.js";
+import { requireUser, clearUserCache } from "../utils/auth.js";
 import { confirmModal } from "../components/modal.js";
 import { api } from "../utils/api.js";
 import { showToast } from "../components/toast.js";
-import { resolveImageUrl } from "../utils/image.js";
+import { applyImageSrc } from "../utils/image.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
 async function main() {
   fetchHeader();
   fetchFooter();
-  const userId = getUserId();
+
+  const user = await requireUser();
 
   const profileImg = document.querySelector(".profile-container img");
   const nicknameEl = document.querySelector(".profile-container h3");
@@ -19,50 +20,17 @@ async function main() {
   const listContainer = document.querySelector(".my-articles-list-container");
   const logoutBtn = document.querySelector(".log-out");
 
-  setProfileInfo();
-  if (userId) {
-    await loadProfile(userId);
-  }
+  setProfileInfo(user);
   setupTabs();
   renderPlaceholderArticles();
   logoutBtn?.addEventListener("click", handleLogout);
 
-  function setProfileInfo() {
-    const storedImage = localStorage.getItem("userProfileImage");
-    if (profileImg) {
-      const resolved = resolveImageUrl(storedImage);
-      if (resolved) {
-        profileImg.src = resolved;
-      } else {
-        profileImg.removeAttribute("src");
-      }
-    }
-    if (nicknameEl) nicknameEl.textContent = "닉네임";
-    if (joinedEl) joinedEl.textContent = "가입일: 2025.11.18";
-  }
-
-  async function loadProfile(userId) {
-    try {
-      const data = await api.get("/users", { params: { userId } });
-      const user = data?.result;
-      if (!user) return;
-
-      if (nicknameEl) nicknameEl.textContent = user.nickname || "닉네임";
-      if (joinedEl) {
-        const createdAt = user.createdAt ?? user.created_at;
-        joinedEl.textContent = createdAt ? `가입일: ${new Date(createdAt).toLocaleDateString()}` : "";
-      }
-
-      const resolved = resolveImageUrl(user.profile_image ?? user.profileImage);
-      if (profileImg) {
-        if (resolved) {
-          profileImg.src = resolved;
-        } else {
-          profileImg.removeAttribute("src");
-        }
-      }
-    } catch (err) {
-      console.error("마이페이지 정보를 불러오지 못했습니다.", err);
+  function setProfileInfo(userData) {
+    applyImageSrc(profileImg, userData?.profile_image ?? userData?.profileImage);
+    if (nicknameEl) nicknameEl.textContent = userData?.nickname || "닉네임";
+    if (joinedEl) {
+      const createdAt = userData?.createdAt ?? userData?.created_at;
+      joinedEl.textContent = createdAt ? `가입일: ${new Date(createdAt).toLocaleDateString()}` : "";
     }
   }
 
@@ -124,18 +92,14 @@ async function main() {
     });
     if (!ok) return;
 
-    const userId = getUserId();
     try {
-      if (userId) {
-        await api.post("/auth/logout", { params: { userId } });
-      }
+      await api.post("/auth/logout");
     } catch (err) {
       showToast(err.message || "로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.", { type: "error" });
       return;
     }
 
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userProfileImage");
+    clearUserCache();
     location.replace("/login.html");
   }
 }

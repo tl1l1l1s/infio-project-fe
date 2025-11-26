@@ -1,5 +1,6 @@
 import { fetchHeader, fetchFooter, getErrorMessageElement } from "../utils/dom.js";
 import { api } from "../utils/api.js";
+import { setCurrentUser } from "../utils/auth.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
@@ -65,8 +66,9 @@ function main() {
 
     try {
       const data = await api.post("/auth/login", { body: payload });
-      localStorage.setItem("userId", data.result.user_id);
-      localStorage.setItem("userProfileImage", data.result.profile_image);
+      if (data?.result) {
+        setCurrentUser({ user_id: data.result.user_id, profile_image: data.result.profile_image });
+      }
       location.href = "/index.html";
     } catch (err) {
       const help = getErrorMessageElement(passwordInput);

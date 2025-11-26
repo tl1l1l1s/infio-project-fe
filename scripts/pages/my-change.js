@@ -1,17 +1,17 @@
 import { fetchHeader, fetchFooter, getErrorMessageElement } from "../utils/dom.js";
-import { getUserId } from "../utils/auth.js";
+import { requireUser, clearUserCache, getCurrentUser, setCurrentUser } from "../utils/auth.js";
 import { showToast } from "../components/toast.js";
 import { api } from "../utils/api.js";
 import { confirmModal } from "../components/modal.js";
-import { resolveImageUrl } from "../utils/image.js";
+import { applyImageSrc } from "../utils/image.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
-function main() {
+async function main() {
   fetchHeader();
   fetchFooter();
 
-  const userId = getUserId();
+  await requireUser();
   const form = document.querySelector(".my-change-form");
   const nicknameInput = document.getElementById("nickname");
   const emailField = document.getElementById("email");
@@ -48,12 +48,9 @@ function main() {
     submitBtn.disabled = true;
 
     try {
-      const data = await api.get("/users", { params: { userId } });
-      if (!data?.result) {
-        throw new Error("회원 정보를 불러오지 못했습니다.");
-      }
+      const user = await getCurrentUser();
+      if (!user) throw new Error("회원 정보를 불러오지 못했습니다.");
 
-      const user = data.result;
       emailField.textContent = user.email || "-";
       nicknameInput.value = user.nickname || "";
       initialNickname = nicknameInput.value;
@@ -75,15 +72,8 @@ function main() {
 
     if (!profilePreviewImg || !avatarPicker) return;
 
-    const resolved = resolveImageUrl(currentProfileImage);
-
-    if (resolved) {
-      profilePreviewImg.src = resolved;
-      avatarPicker.classList.add("has-image");
-    } else {
-      profilePreviewImg.removeAttribute("src");
-      avatarPicker.classList.remove("has-image");
-    }
+    const resolved = applyImageSrc(profilePreviewImg, currentProfileImage);
+    avatarPicker.classList.toggle("has-image", Boolean(resolved));
   }
 
   function handleAvatarClick(event) {
@@ -129,9 +119,8 @@ function main() {
     if (!ok) return;
 
     try {
-      await api.delete("/users", { params: { userId } });
-      localStorage.removeItem("userId");
-      localStorage.removeItem("userProfileImage");
+      await api.delete("/users");
+      clearUserCache();
       showToast("회원 탈퇴가 완료되었습니다.");
       location.replace("/login.html");
     } catch (err) {
@@ -247,14 +236,13 @@ function main() {
 
       requests.push(
         api.patch("/users", {
-          params: { userId },
           body: formData,
-        }),
+        })
       );
     }
 
     if (passwordChanged) {
-      requests.push(api.patch("/users/password", { params: { userId }, body: { password: pwd } }));
+      requests.push(api.patch("/users/password", { body: { password: pwd } }));
     }
 
     try {
@@ -263,13 +251,9 @@ function main() {
         const profileResponse = results[0]?.result;
         currentProfileImage = profileResponse?.profile_image ?? currentProfileImage;
         initialNickname = profileResponse?.nickname ?? nickname;
+        setCurrentUser({ ...(profileResponse || {}), email: emailField?.textContent || "" });
         setProfileImage(currentProfileImage);
         removeProfileImage = false;
-        if (currentProfileImage) {
-          localStorage.setItem("userProfileImage", currentProfileImage);
-        } else {
-          localStorage.removeItem("userProfileImage");
-        }
         selectedProfileFile = null;
         if (profileImageInput) {
           profileImageInput.value = "";

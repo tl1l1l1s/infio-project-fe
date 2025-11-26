@@ -1,21 +1,22 @@
 import { fetchFooter, fetchHeader } from "../../utils/dom.js";
-import { getUserId } from "../../utils/auth.js";
+import { getCurrentUser, requireUser } from "../../utils/auth.js";
 import { formatDate, formatCount } from "../../utils/format.js";
 import { showToast } from "../../components/toast.js";
 import { api } from "../../utils/api.js";
 import { confirmModal } from "../../components/modal.js";
-import { resolveImageUrl } from "../../utils/image.js";
+import { applyAvatarBackground, applyImageSrc } from "../../utils/image.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
-function main() {
+async function main() {
   fetchHeader();
   fetchFooter();
 
   const COMMENT_PAGE_SIZE = 8;
 
   let articleId;
-  let userId = getUserId();
+  let currentUser = null;
+  let userId = null;
   const commentListEl = document.getElementById("comment-list");
   const commentForm = document.getElementById("comment-form");
   const commentTextarea = document.getElementById("comment-content");
@@ -49,6 +50,8 @@ function main() {
     return;
   }
 
+  await loadCurrentUser();
+
   setupCommentList();
 
   loadArticle();
@@ -56,6 +59,19 @@ function main() {
   bindArticleButtons();
   bindCommentForm();
   bindCommentActions();
+
+  async function loadCurrentUser() {
+    currentUser = await getCurrentUser();
+    userId = currentUser?.user_id ?? currentUser?.userId ?? null;
+  }
+
+  async function ensureAuth() {
+    if (userId) return userId;
+    const user = await requireUser();
+    currentUser = user;
+    userId = user?.user_id ?? user?.userId ?? null;
+    return userId;
+  }
 
   async function loadArticle() {
     try {
@@ -76,7 +92,7 @@ function main() {
 
     const authorNickname = article?.writtenBy?.nickname;
     document.getElementById("post-author").textContent = authorNickname;
-    setAvatarImage(document.querySelector(".author .avatar"), article?.writtenBy?.profile_image);
+    applyAvatarBackground(document.querySelector(".author .avatar"), article?.writtenBy?.profile_image);
 
     const createdAt = article.createdAt ?? article.created_at;
     const timeEl = document.getElementById("post-time");
@@ -122,15 +138,13 @@ function main() {
     const cover = document.querySelector(".post-cover");
     if (!image || !cover) return;
 
-    const resolvedUrl = resolveImageUrl(imageUrl);
+    const resolvedUrl = applyImageSrc(image, imageUrl);
 
     if (resolvedUrl) {
-      image.src = resolvedUrl;
       image.alt = "게시글 이미지";
       image.style.display = "block";
       cover.style.background = "transparent";
     } else {
-      image.removeAttribute("src");
       image.style.display = "none";
       cover.style.background = "#e5e7eb";
     }
@@ -169,8 +183,9 @@ function main() {
   }
 
   async function fetchLikeStatus() {
+    if (!userId) return;
     try {
-      const data = await api.get(`/articles/${articleId}/likes`, { params: { userId } });
+      const data = await api.get(`/articles/${articleId}/likes`);
       likeCount = data.result.like_count ?? likeCount;
       isLiked = Boolean(data.result.is_liked);
       updateLikeButtonAppearance();
@@ -211,7 +226,8 @@ function main() {
         if (!ok) return;
 
         try {
-          await api.delete(`/articles/${articleId}`, { params: { userId } });
+          await ensureAuth();
+          await api.delete(`/articles/${articleId}`);
           location.replace("/index.html");
         } catch (err) {
           showToast(err.message || "게시글 삭제에 실패했습니다.");
@@ -221,15 +237,19 @@ function main() {
   }
 
   async function handleToggleLike() {
+    const ensuredUserId = await ensureAuth();
+    if (!ensuredUserId) {
+      return;
+    }
     if (likeThrottle) return;
     likeThrottle = true;
     try {
       if (isLiked) {
-        await api.delete(`/articles/${articleId}/likes`, { params: { userId } });
+        await api.delete(`/articles/${articleId}/likes`);
         likeCount = Math.max(0, likeCount - 1);
         isLiked = false;
       } else {
-        await api.post(`/articles/${articleId}/likes`, { params: { userId } });
+        await api.post(`/articles/${articleId}/likes`);
         likeCount += 1;
         isLiked = true;
       }
@@ -349,15 +369,14 @@ function main() {
       if (commentSubmitBtn) commentSubmitBtn.disabled = true;
 
       try {
+        await ensureAuth();
         const isEditing = Boolean(editingCommentId);
         if (isEditing) {
           await api.patch(`/articles/${articleId}/comments/${editingCommentId}`, {
-            params: { userId },
             body: { content },
           });
         } else {
           await api.post(`/articles/${articleId}/comments`, {
-            params: { userId },
             body: { content },
           });
         }
@@ -420,6 +439,7 @@ function main() {
   }
 
   async function handleCommentDelete(commentId) {
+    await ensureAuth();
     const ok = await confirmModal({
       title: "댓글을 삭제하시겠습니까?",
       message: "삭제한 내용은 복구할 수 없습니다.",
@@ -428,9 +448,7 @@ function main() {
     if (!ok) return;
 
     try {
-      await api.delete(`/articles/${articleId}/comments/${commentId}`, {
-        params: { userId },
-      });
+      await api.delete(`/articles/${articleId}/comments/${commentId}`);
 
       if (editingCommentId === commentId) {
         resetCommentFormState();
@@ -596,7 +614,7 @@ function createCommentItem(comment, options = {}) {
   avatarWrapper.className = "comment-avatar";
   const avatar = document.createElement("span");
   avatar.className = "avatar";
-  setAvatarImage(avatar, comment?.writtenBy?.profile_image ?? comment?.writtenBy?.profileImage);
+  applyAvatarBackground(avatar, comment?.writtenBy?.profile_image ?? comment?.writtenBy?.profileImage);
   avatarWrapper.appendChild(avatar);
 
   const contentWrapper = document.createElement("div");
@@ -663,16 +681,4 @@ function createCommentItem(comment, options = {}) {
   item.append(avatarWrapper, contentWrapper);
 
   return item;
-}
-
-function setAvatarImage(target, imageUrl) {
-  if (!target) return;
-  const resolved = resolveImageUrl(imageUrl);
-  if (resolved) {
-    target.style.backgroundImage = `url("${resolved}")`;
-    target.style.backgroundSize = "cover";
-    target.style.backgroundPosition = "center";
-  } else {
-    target.style.removeProperty("background-image");
-  }
 }
