@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>아무말대잔치</title>
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/articles/list.css" />
+    <script type="module" src="./scripts/pages/articles/list.js"></script>
+  </head>
+  <div id="header"></div>
+  <body>
+    <div class="article-list-wrapper">
+      <main class="article-list-container">
+        <section class="article-list">
+          <article class="article-card">
+            <div class="card-header">
+              <h2 class="card-title">제목</h2>
+              <div class="theme">react</div>
+            </div>
+
+            <div class="card-meta">
+              <div class="card-stats">
+                <span> <img src="./assets/images/heart.svg" />0</span>
+                <span> <img src="./assets/images/message-square.svg" />0</span>
+                <span> <img src="./assets/images/eye.svg" />0</span>
+              </div>
+            </div>
+
+            <hr class="card-divider" />
+
+            <div class="card-author">
+              <span class="avatar"></span>
+              <span class="name">작성자</span>
+            </div>
+            <time class="card-time" datetime="2021-01-01T00:00:00">2021-01-01 00:00:00</time>
+          </article>
+        </section>
+
+        <section class="trending-article-list">
+          <div class="trending-article-title">
+            <img src="./assets/images/trending.svg" />
+            <h3>인기 게시글</h3>
+          </div>
+          <article class="article-card">
+            <div class="card-header">
+              <h2 class="card-title">제목</h2>
+              <div class="theme">React</div>
+            </div>
+
+            <div class="card-meta">
+              <div class="card-stats">
+                <span> <img src="./assets/images/heart.svg" />0</span>
+                <span> <img src="./assets/images/message-square.svg" />0</span>
+                <span> <img src="./assets/images/eye.svg" />0</span>
+              </div>
+              <time class="card-time" datetime="2021-01-01T00:00">2021-01-01 00:00</time>
+            </div>
+
+            <hr class="card-divider" />
+
+            <div class="card-author">
+              <span class="avatar"></span>
+              <span class="name">작성자</span>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <button class="write" type="button" onclick="location.href='./articles/write.html'">
+      <img src="./assets/images/plus.svg" alt="" />
+      <span>글쓰기</span>
+    </button>
+  </body>
+  <div id="footer"></div>
+</html>
