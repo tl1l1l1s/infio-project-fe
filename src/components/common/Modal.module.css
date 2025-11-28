@@ -1,0 +1,73 @@
+.wrapper {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--text-main) 30%, transparent);
+  z-index: 99;
+  padding-bottom: 10%;
+}
+
+.open {
+  display: flex;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  background: var(--white-color);
+  border-radius: 18px;
+  padding: 32px 32px;
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--text-main) 15%, transparent);
+}
+
+.title {
+  margin: 16px 0;
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  color: var(--text-main);
+}
+
+.message {
+  margin: 0 0 28px 0;
+  font-size: 18px;
+  text-align: center;
+  color: var(--text-main);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.button {
+  height: 48px;
+  margin: 0 12px;
+  border-radius: 18px;
+  font-weight: 700;
+  font-size: 18px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonConfirm {
+  background: var(--primary-color);
+  color: var(--white-color);
+}
+
+.buttonConfirm:hover {
+  background: var(--primary-hover);
+}
+
+.buttonCancel {
+  background-color: var(--secondary-color);
+  color: var(--white-color);
+}
+
+.buttonCancel:hover {
+  background: var(--secondary-hover);
+}
