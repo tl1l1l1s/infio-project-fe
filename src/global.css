@@ -6,10 +6,13 @@
   --primary-hover: #8897a5;
 
   --secondary-color: #bcccdc;
-  --secondary-hover: #263238;
+  --secondary-hover: #a0aebc;
 
-  --cancel-color: #bcccdc;
-  --cancel-hover: #a0aebc;
+  --tertiary-color: #3d4d57;
+  --tertiary-hover: #262f35;
+
+  --theme-color: #c3e8fb;
+  --theme-hover: #91c1d9;
 
   --text-main: #37474f;
   --text-sub: #6b7280;
@@ -21,8 +24,6 @@
 
   --white-color: #fbfdff;
   --highlight-color: #5542c1;
-  --theme-color: #c3e8fb;
-  --theme-hover: #91c1d9;
   --theme-text: #4d627d;
   --error-color: #b00020;
 }

@@ -1,0 +1,17 @@
+.theme {
+  font-size: 14px;
+  padding: 6px 14px;
+  background-color: var(--theme-color);
+  border: none;
+  border-radius: 24px;
+  color: var(--theme-text);
+  cursor: pointer;
+}
+
+.theme:hover {
+  background-color: var(--theme-hover);
+}
+
+.isActive {
+  background-color: var(--theme-hover);
+}
