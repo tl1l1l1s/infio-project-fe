@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../common/Button";
 import SearchBar from "../SearchBar";
 import styles from "./Header.module.css";
 
 function Header() {
+  const navigate = useNavigate();
   return (
     <>
       <header className={styles.headerWrapper}>
@@ -12,7 +14,7 @@ function Header() {
           </a>
           <SearchBar />
           <div className={styles.headerActions}>
-            <Button variant="icon" onClick={() => alert("알림 클릭됨")}>
+            <Button variant="icon" onClick={() => navigate("/login")}>
               <img src="./assets/images/user.svg" style={{ width: "18px", height: "32px" }} />
             </Button>
             {/* <a className={styles.headerProfile} href="../../my.html">

@@ -1,10 +1,15 @@
 import "./App.css";
+import Layout from "./components/layout/Layout";
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
 
 function App() {
   return (
-    <>
-      <div>Community initialized with Vite + React!</div>
-    </>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Layout>
   );
 }
 
