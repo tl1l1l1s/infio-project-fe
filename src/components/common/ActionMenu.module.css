@@ -1,0 +1,53 @@
+.menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.trigger:hover {
+  background-color: var(--outline);
+}
+
+.dropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  min-width: 80px;
+  background: var(--white-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--text-main) 8%, transparent);
+  z-index: 10;
+}
+
+.open {
+  display: flex;
+}
+
+.item {
+  background: transparent;
+  color: var(--text-main);
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 6px;
+}
+
+.item:hover {
+  background-color: var(--outline);
+}
