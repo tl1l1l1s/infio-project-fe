@@ -3,8 +3,8 @@ import styles from "./Button.module.css";
 const variantClass = {
   primary: styles.primary,
   secondary: styles.secondary,
+  tertiary: styles.tertiary,
   icon: styles.icon,
-  imageRemove: styles.imageRemove,
 };
 
 const sizeClass = {

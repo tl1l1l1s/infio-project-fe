@@ -1,0 +1,27 @@
+.input {
+  width: 100%;
+  padding: 14px 14px;
+  border: 1px solid var(--outline);
+  border-radius: 8px;
+  background: var(--white-color);
+  color: var(--text-main);
+  outline: none;
+}
+
+.input:hover {
+  border-color: var(--outline-focus);
+}
+
+.input:focus {
+  border-color: var(--outline-focus);
+}
+
+.input::placeholder {
+  color: var(--text-sub);
+}
+
+.input:disabled {
+  background: var(--bg-surface);
+  color: var(--text-sub);
+  cursor: not-allowed;
+}

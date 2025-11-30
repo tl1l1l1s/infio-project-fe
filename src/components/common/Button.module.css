@@ -60,15 +60,16 @@ img {
   background: var(--secondary-color);
 }
 
-.imageRemove {
+.tertiary {
+  width: fit-content;
+  border-radius: 99px;
+  margin: auto;
+  padding: 4px 18px;
   background: var(--tertiary-color);
   color: var(--white-color);
-  border-radius: 99px;
-  padding: 4px 18px;
-  margin: auto 0;
 }
 
-.imageRemove:hover {
+.tertiary:hover {
   background: var(--tertiary-hover);
 }
 
