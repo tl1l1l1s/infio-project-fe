@@ -4,6 +4,7 @@ import moreIcon from "/public/assets/images/more.svg?import";
 
 function ActionMenu({ items = [] }) {
   const [open, setOpen] = useState(false);
+
   return (
     <div className={styles.menu}>
       <button className={styles.trigger} type="button" onClick={() => setOpen(!open)}>
@@ -11,7 +12,12 @@ function ActionMenu({ items = [] }) {
       </button>
       <div className={`${styles.dropdown} ${open ? styles.open : ""}`}>
         {items.map((item) => (
-          <button key={item.label} className={styles.item} type="button">
+          <button
+            key={item.label}
+            onClick={typeof item.click === "function" ? item.click : undefined}
+            className={styles.item}
+            type="button"
+          >
             {item.label}
           </button>
         ))}
