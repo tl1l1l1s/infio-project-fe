@@ -3,7 +3,7 @@ import { usePageRouter } from "../../hooks/usePageRouter";
 import SearchBar from "../SearchBar";
 import Button from "../common/Button";
 import styles from "./Header.module.css";
-import userIcon from "../../assets/images/user.svg";
+import userIcon from "../../../public/assets/images/user.svg";
 
 function Header() {
   const { goToLogin } = usePageRouter();

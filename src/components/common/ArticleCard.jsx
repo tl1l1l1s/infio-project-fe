@@ -4,10 +4,11 @@ import eyeIcon from "../../../public/assets/images/eye.svg";
 import heartIcon from "../../../public/assets/images/heart.svg";
 import messageIcon from "../../../public/assets/images/message-square.svg";
 import styles from "./ArticleCard.module.css";
+import { Link } from "react-router-dom";
 
-function ArticleCard({ title, writtenBy, createdAt, viewCount, likeCount, commentCount, theme }) {
+function ArticleCard({ article_id, title, writtenBy, createdAt, viewCount, likeCount, commentCount, theme }) {
   return (
-    <article className={styles.articleCard}>
+    <Link className={styles.articleCard} to={`/articles/${article_id}`}>
       <div className={styles.cardHeader}>
         <h2 className={styles.cardTitle}>{title}</h2>
         <Theme theme={theme} />
@@ -38,7 +39,7 @@ function ArticleCard({ title, writtenBy, createdAt, viewCount, likeCount, commen
           </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
