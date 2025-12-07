@@ -1,4 +1,4 @@
-# Community (Frontend)
+# Community INFIO
 
 - 커뮤니티 웹 애플리케이션 서비스의 Vite 기반 React
 - 정적 HTML/CSS + 바닐라 ES 모듈 버전은 `legacy/` 내에 존재
