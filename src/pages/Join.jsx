@@ -1,9 +1,8 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { usePageRouter } from "../hooks/usePageRouter";
 import { useForm } from "../hooks/useForm";
 import { registerUser } from "../api/users";
 import { showToast } from "../lib/toast";
-import { resolveImageUrl } from "../utils/image";
 import Button from "../components/common/Button";
 import ErrorMessage from "../components/common/ErrorMessage";
 import Input from "../components/common/Input";
@@ -11,50 +10,19 @@ import styles from "./Join.module.css";
 
 function Join() {
   const { goToLogin } = usePageRouter();
-  const fileInputRef = useRef(null);
-  const [previewUrl, setPreviewUrl] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
-  const { register, handleSubmit, errors, isSubmitting, getValues, setValue } = useForm({
-    defaultValues: { email: "", nickname: "", password: "", passwordConfirm: "", profileImage: null },
+  const { register, handleSubmit, errors, isSubmitting, getValues } = useForm({
+    defaultValues: { email: "", nickname: "", password: "", passwordConfirm: "" },
   });
-
-  const handleAvatarPick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0] || null;
-    setValue("profileImage", file, { shouldValidate: false });
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setPreviewUrl(reader.result || "");
-      reader.readAsDataURL(file);
-    } else {
-      setPreviewUrl("");
-    }
-  };
-
-  const handleImageRemove = () => {
-    setValue("profileImage", null, { shouldValidate: false });
-    setPreviewUrl("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
 
   const onSubmit = async (values) => {
     setFieldErrors({});
-    const imageFile = values.profileImage instanceof File ? values.profileImage : null;
     try {
-      await registerUser(
-        {
-          email: values.email.trim(),
-          nickname: values.nickname.trim(),
-          password: values.password,
-        },
-        imageFile
-      );
+      await registerUser({
+        email: values.email.trim(),
+        nickname: values.nickname.trim(),
+        password: values.password,
+      });
       showToast("회원가입이 완료되었습니다.", { type: "info" });
       goToLogin();
     } catch (err) {
@@ -73,23 +41,6 @@ function Join() {
     <div className={styles.wrapper}>
       <h1 className={styles.title}>회원가입</h1>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <div className={styles.profileImage}>
-          <div className={styles.avatar} onClick={handleAvatarPick}>
-            {previewUrl && <img src={resolveImageUrl(previewUrl) || previewUrl} />}
-            <input
-              type="file"
-              accept="image/*"
-              style={{ opacity: 0, position: "absolute", inset: 0, cursor: "pointer" }}
-              ref={fileInputRef}
-              onChange={handleFileChange}
-            />
-          </div>
-          <Button variant="tertiary" size="sm" type="button" onClick={handleImageRemove} disabled={isSubmitting}>
-            이미지 삭제
-          </Button>
-          <ErrorMessage message={errors.profileImage} />
-        </div>
-
         <div className={styles.section}>
           <div className={styles.field}>
             <label className={styles.label}>이메일</label>

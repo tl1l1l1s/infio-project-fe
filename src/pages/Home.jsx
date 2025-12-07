@@ -11,40 +11,41 @@ import plusIcon from "/assets/images/plus.svg";
 // trending 임시 mock data
 const trending = [
   {
-    id: 3,
-    title: "인기 글",
-    theme: "Lorem",
-    writtenBy: {
-      nickname: "작성자",
-    },
-    createdAt: "2021-01-03 09:30",
-    viewCount: 10,
-    likeCount: 5,
-    commentCount: 1,
-  },
-  {
-    id: 4,
-    title: "Hot Topic",
+    id: 999,
+    title: "한정판 스티커 받았습니다 ㅎㅎ",
     theme: "None",
     writtenBy: {
-      nickname: "작성자",
+      nickname: "레어닉",
     },
-    createdAt: "2021-01-04 14:10",
-    viewCount: 8,
+    createdAt: "2025-11-30 09:30",
+    viewCount: 15,
     likeCount: 2,
-    commentCount: 4,
+    commentCount: 0,
   },
   {
-    id: 5,
-    title: "Hot Topic",
+    id: 998,
+    title: "유저 추천해요",
     theme: "None",
     writtenBy: {
-      nickname: "작성자",
+      nickname: "추천",
+      profile_image: "/uploads/articles/landscape.jpg",
     },
-    createdAt: "2021-01-04 14:10",
-    viewCount: 8,
+    createdAt: "2025-12-04 12:10",
+    viewCount: 13,
     likeCount: 2,
-    commentCount: 4,
+    commentCount: 2,
+  },
+  {
+    id: 997,
+    title: "인텔리제이 테마 추천",
+    theme: "None",
+    writtenBy: {
+      nickname: "정복",
+    },
+    createdAt: "2025-12-05 14:10",
+    viewCount: 12,
+    likeCount: 2,
+    commentCount: 2,
   },
 ];
 

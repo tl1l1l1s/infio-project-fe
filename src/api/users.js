@@ -7,13 +7,8 @@ export async function fetchUsers() {
 }
 
 // POST /users
-export async function registerUser(payload, profileImage) {
-  const formData = new FormData();
-  formData.append("payload", new Blob([JSON.stringify(payload)], { type: "application/json" }));
-  if (profileImage) {
-    formData.append("profileImage", profileImage);
-  }
-  const response = await client.post("/users", formData);
+export async function registerUser(payload) {
+  const response = await client.post("/users", payload);
   return response.data;
 }
 
