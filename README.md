@@ -1,28 +1,101 @@
-# Community INFIO
+# INFIO Community (Frontend)
 
-- 커뮤니티 웹 애플리케이션 서비스의 Vite 기반 React
-- 정적 HTML/CSS + 바닐라 ES 모듈 버전은 `legacy/` 내에 존재
+<table>
+  <tr>
+    <td valign="top" width="200">
+      <img src="https://github.com/user-attachments/assets/0571a8fb-27bd-4b3a-8b5b-6df4a7542bc8" alt="Infio Logo" width="100%" />
+    </td>
+    <td valign="middle">
+      미니멀리즘적인 UI/UX를 통해 빠르고 정확하게 <b>정보를 공유하는 웹 커뮤니티 서비스</b>입니다. <br/> 
+      불필요한 복잡함은 전부 덜어내고 정보(Information)와 관심사에만 집중할 수 있어요.
+    </td>
+  </tr>
+</table>
+
+## 개요
+Vite 기반 React <br>
+정적 HTML/CSS + 바닐라 ES 모듈 버전은 `legacy/` 내에 존재
+
+- 개발 기간 : 2025.10. - 2025. 12. (2개월)
+- 개발 인원 및 담당 역할 : 1인 (기획, 디자인, 개발)
+
+### 프로젝트 구조
+```
+ktb3-theta-full-community-fe/
+  ├── src/
+  │   ├── api/                           # Axios 인스턴스, React Query 클라이언트, 도메인별 API 모듈
+  │   ├── components/
+  │   │   ├── layout/                    # 공용 레이아웃(헤더/푸터 등)
+  │   │   └── common/                    # 버튼, 토스트 등 공용 UI
+  │   ├── contexts/                      # 전역 컨텍스트(예: 사용자 상태)
+  │   ├── features/                      # 도메인별 훅/컴포넌트 articles/auth/comments/likes/users (+comments/
+  articles 전용 components)
+  │   ├── hooks/                         # 재사용 훅
+  │   ├── lib/                           # 라우터/쿼리 설정 등 공용 라이브러리
+  │   ├── utils/                         # 유틸 함수
+  │   └── pages/                         # 라우팅 페이지(Home/Login/Join/My/게시글 CRUD)
+  │   ├── App.jsx, main.jsx, App.css, global.css
+  ├── public/
+  │   └── assets/images/                 # 정적 이미지
+  ├── legacy/                            # 바닐라 ES 모듈 기반 정적 버전
+  │   ├── assets/images/
+  │   ├── articles/                      # 정적 HTML 페이지
+  │   ├── scripts/                       # components/pages/utils 스크립트
+  │   └── styles/                        # 공용/컴포넌트/게시글 스타일
+  ├── index.html
+  ├── package.json, package-lock.json
+  ├── vite.config.js, eslint.config.js
+  └── README.md
+```
 
 ## 기술 스택
 
-- React 19, Vite, React Router DOM 7
-- TanStack Query 5 + Axios로 Spring Boot 백엔드(`http://localhost:8080`) 호출
-- 쿠키 기반 인증, Axios 인터셉터로 토큰 만료 시 리프레시 후 재요청
-- CSS Modules + 전역 스타일 시트 구성
-- (Legacy) HTML, CSS, JavaScript(ES Modules) + 브라우저 `fetch` 호출
+<img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"> <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"> <img src="https://img.shields.io/badge/React_Router_DOM_7-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"> <img src="https://img.shields.io/badge/TanStack_Query_5-FF4154?style=for-the-badge&logo=reactquery&logoColor=white"> <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"> <img src="https://img.shields.io/badge/CSS_Modules-000000?style=for-the-badge&logo=css3&logoColor=white"> 
 
-## 주요 기능 / 특징
+### 🗂️ /legacy
+<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
 
-- 회원가입/로그인/로그아웃 및 프로필/비밀번호 변경
-- 게시글 목록/상세 조회, 작성/수정/삭제, 페이지네이션
-- 댓글 작성/수정/삭제 및 좋아요 토글, 게시글별 카운트 반영
-- 비로그인 접근 시 로그인 페이지로 리다이렉트
+## 주요 기능
 
-## 시연영상
+### 게시글
+- Home
+  - Infinite Scroll(7개 단위 페이지네이션) 목록 조회
+  - 게시글 작성 버튼
+- 작성/수정
+  - 필수값 검증: 주제 / 제목 / 본문
+  - 이미지 업로드 및 미리보기 지원
+- 상세
+  - 작성자 전용 수정 / 삭제 기능
+
+### 댓글
+- 상세 화면에서 인라인 처리
+  - Infinite Scroll 목록 조회
+  - 작성 / 수정 / 삭제 시 Optimistic Update, 댓글 카운트 증감 반영
+
+### 좋아요
+- 상세 페이지 좋아요 토글
+  - Optimistic Update로 즉시 반영
+
+### 인증
+- 로그인
+  - 이메일 / 비밀번호 형식 검증
+- 회원가입
+  - 이메일 / 닉네임 중복 검사, 비밀번호 규칙 검증
+- Axios 인증 처리 : `401 token_expired` 시 자동 리프레시 시도
+
+### 마이페이지 / 프로필
+- 내 정보 표시
+- 프로필 수정
+  - 닉네임 변경, 프로필 이미지 업로드 / 미리보기 / 삭제, 비밀번호 변경
+
+### UI / UX 공통
+- 전체 레이아웃 : 헤더 / 푸터 / Toast container
+- 공통 컴포넌트 : Button / Modal / Action Menu / Input
+
+## 상세 화면
 _클릭 시 유튜브로 이동합니다._ <br />
 [![Video Label](https://img.youtube.com/vi/sKGC0xNvk4k/0.jpg)](https://youtu.be/sKGC0xNvk4k)
 
-## 스크린샷
 ### 홈 화면
 <img width="1512" height="824" alt="Screenshot 2025-12-07 at 23 16 01" src="https://github.com/user-attachments/assets/c8bd55da-adba-4953-ac36-90e535bb89ea" />
 <img width="1512" height="822" alt="Screenshot 2025-12-07 at 23 14 38" src="https://github.com/user-attachments/assets/a8eec40d-d7bd-43b4-8f57-9f4848d7e010" />
@@ -43,32 +116,13 @@ _클릭 시 유튜브로 이동합니다._ <br />
 <img width="1512" height="824" alt="Screenshot 2025-12-07 at 23 16 13" src="https://github.com/user-attachments/assets/866b9d1d-4b46-48e8-af1d-5586c22d98ba" />
 <img width="1512" height="823" alt="Screenshot 2025-12-07 at 23 16 20" src="https://github.com/user-attachments/assets/9c4b1fe7-7af1-4540-8dca-3e698b095d21" />
 
-## 프로젝트 구조
-
-```
-ktb3-theta-full-community-fe/
- ㄴ src/
-    ㄴ api/            # Axios 클라이언트, 도메인별 API 모듈, React Query 클라이언트
-    ㄴ components/     # 레이아웃, 공용 컴포넌트(헤더/푸터/토스트 등)
-    ㄴ contexts/       # 전역 컨텍스트 (예: 사용자 상태)
-    ㄴ features/       # 도메인별 훅/컴포넌트(articles/auth/comments/likes/users)
-    ㄴ hooks, lib, utils
-    ㄴ pages/          # 라우팅 페이지 컴포넌트(Home/Login/Join/My/게시글 CRUD 등)
-    ㄴ App.jsx, main.jsx, 스타일(App.css, global.css)
- ㄴ public/            # 정적 리소스
- ㄴ legacy/            # 바닐라 ES 모듈 기반 정적 버전(HTML/CSS/JS)
- ㄴ package.json, vite.config.js, eslint.config.js
-```
-
-## 학습한 내용
-
-- 추가 예정
-
 ## 설치 및 실행 방법
 
+0. 백엔드 `http://localhost:8080` 실행 필요
 1. 저장소 클론: `git clone <repo-url>`
 2. 디렉터리 이동: `cd ktb3-theta-full-community-fe`
 3. 패키지 설치: `npm install`
-4. 로컬 개발 서버: `npm run dev` 후 Vite가 안내한 주소로 접속 (백엔드 `http://localhost:8080` 가동 필요)
-5. 프로덕션 번들: `npm run build` (빌드 산출물은 `dist/`)
-6. (Legacy 정적 버전) `npm install -g http-server` 후 `http-server legacy -p 5500` 로 기존 바닐라 버전 확인 가능
+4. 로컬 개발 서버: `npm run dev` 후 Vite가 안내한 주소로 접속
+
+## Backend Repository...
+[👉 Infio-BE-Repository](https://github.com/tl1l1l1s/infio-project-be)
