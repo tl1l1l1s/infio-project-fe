@@ -4,6 +4,7 @@ import ErrorMessage from "../../../components/common/ErrorMessage";
 import Input from "../../../components/common/Input";
 import { useForm } from "../../../hooks/useForm";
 import { usePageRouter } from "../../../hooks/usePageRouter";
+import { FALLBACK_THEME_OPTIONS, THEME_LABEL_MAP } from "../../../constants/themes";
 import { resolveImageUrl } from "../../../utils/image";
 import styles from "./ArticleForm.module.css";
 
@@ -12,12 +13,12 @@ function ArticleForm({
   submitLabel = "작성",
   cancelLabel = "취소",
   initialValues = {},
+  themes = [],
   onSubmit,
   onCancel,
 }) {
-  const { theme = "None", title = "", content = "", imageSrc = "" } = initialValues;
+  const { theme = "NONE", title = "", content = "", imageSrc = "" } = initialValues;
   const [preview, setPreview] = useState(resolveImageUrl(imageSrc));
-  const themes = ["None", "Daily", "Game", "Keyboard", "Dog", "Cat"];
 
   const objectUrlRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -25,7 +26,7 @@ function ArticleForm({
   const { goBack } = usePageRouter();
 
   const { register, handleSubmit, errors, setValue } = useForm({
-    defaultValues: { theme, title, content, image: null },
+    defaultValues: { theme: theme || "NONE", title, content, image: null },
   });
 
   const handleImageChange = (file) => {
@@ -55,9 +56,9 @@ function ArticleForm({
   const submitHandler = (values) => {
     if (!onSubmit) return;
     const payload = {
-      theme: values.theme,
       title: values.title,
       content: values.content,
+      theme: values.theme || "NONE",
     };
     const imageFile = values.image instanceof File ? values.image : null;
     onSubmit({ payload, imageFile });
@@ -72,20 +73,15 @@ function ArticleForm({
             <label className={styles.label} htmlFor="theme">
               주제*
             </label>
-            <select
-              id="theme"
-              className={styles.select}
-              {...register("theme", {
-                required: { message: "주제를 선택하세요." },
-              })}
-              defaultValue={theme}
-            >
+            <select id="theme" className={styles.select} {...register("theme")} defaultValue={theme || ""}>
               <option value="">주제를 선택하세요</option>
-              {themes.map((t) => (
-                <option key={t} value={t.toLowerCase()}>
-                  {t}
-                </option>
-              ))}
+              {themes.length > 0
+                ? themes
+                : FALLBACK_THEME_OPTIONS.map((t) => (
+                    <option key={t.key} value={t.key}>
+                      {t.label ?? THEME_LABEL_MAP[t.key] ?? t.key}
+                    </option>
+                  ))}
             </select>
             <ErrorMessage message={errors.theme} />
           </div>

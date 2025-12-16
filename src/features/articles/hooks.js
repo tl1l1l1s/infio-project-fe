@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { fetchArticles, fetchArticle, createArticle, updateArticle, deleteArticle } from "../../api/articles";
+import { fetchThemes } from "../../api/themes";
 import { showToast } from "../../lib/toast";
 
 export function useFetchArticles() {
@@ -25,6 +26,25 @@ export function useFetchArticle(articleId) {
       showToast("게시글을 불러오지 못했습니다.", { type: "error" });
     },
   });
+}
+
+export function useFetchThemes() {
+  const query = useQuery({
+    queryKey: ["themes"],
+    queryFn: fetchThemes,
+    select: (data) => data?.result ?? [],
+    staleTime: 1000 * 60 * 5,
+    onError: () => {
+      showToast("테마 목록을 불러오지 못했습니다.", { type: "error" });
+    },
+  });
+
+  return {
+    themes: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: query.refetch,
+  };
 }
 
 export function useCreateArticle() {

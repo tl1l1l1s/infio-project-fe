@@ -8,6 +8,8 @@ import logoutIcon from "/assets/images/log-out.svg";
 import settingsIcon from "/assets/images/settings.svg";
 import { useFetchUser } from "../features/users/hooks";
 import { useLogout } from "../features/auth/hooks";
+import { useFetchThemes } from "../features/articles/hooks";
+import { FALLBACK_THEME_OPTIONS } from "../constants/themes";
 import formatDate from "../utils/formatDate";
 import { resolveImageUrl } from "../utils/image";
 
@@ -16,7 +18,7 @@ const myArticles = [
   {
     id: 1,
     title: "내가 쓴 글1",
-    theme: "None",
+    theme: "NONE",
     writtenBy: {
       nickname: "유저",
     },
@@ -28,7 +30,7 @@ const myArticles = [
   {
     id: 2,
     title: "내가 쓴 글2",
-    theme: "None",
+    theme: "NONE",
     writtenBy: {
       nickname: "유저",
     },
@@ -44,7 +46,7 @@ const bookmarkedArticles = [
   {
     id: 1,
     title: "북마크 한 글 1",
-    theme: "None",
+    theme: "NONE",
     writtenBy: {
       nickname: "유저",
     },
@@ -56,7 +58,7 @@ const bookmarkedArticles = [
   {
     id: 2,
     title: "북마크 한 글2",
-    theme: "None",
+    theme: "NONE",
     writtenBy: {
       nickname: "유저",
     },
@@ -69,11 +71,13 @@ const bookmarkedArticles = [
 
 function My() {
   const { data: myData } = useFetchUser();
+  const { themes } = useFetchThemes();
   const profile = myData?.result || {};
   const { goToMyChange, goToHome } = usePageRouter();
   const { mutate: logout } = useLogout();
   const [isLogoutOpen, setLogoutOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("written");
+  const themeMap = new Map((themes?.length ? themes : FALLBACK_THEME_OPTIONS).map((t) => [t.key, t.label]));
 
   const handleLogout = () =>
     logout(undefined, {
@@ -122,7 +126,7 @@ function My() {
 
           <div className={styles.list}>
             {(activeTab === "written" ? myArticles : bookmarkedArticles).map((item) => (
-              <ArticleCard key={item.id} className={styles.myArticle} {...item} />
+              <ArticleCard key={item.id} className={styles.myArticle} {...item} themeMap={themeMap} />
             ))}
           </div>
         </div>

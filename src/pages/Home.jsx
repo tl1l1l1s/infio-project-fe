@@ -2,8 +2,9 @@ import { useMemo } from "react";
 import { usePageRouter } from "../hooks/usePageRouter";
 import ArticleCard from "../components/common/ArticleCard";
 import Button from "../components/common/Button";
-import { useFetchArticles } from "../features/articles/hooks";
+import { useFetchArticles, useFetchThemes } from "../features/articles/hooks";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
+import { FALLBACK_THEME_OPTIONS } from "../constants/themes";
 import styles from "./Home.module.css";
 import trendingIcon from "/assets/images/trending.svg";
 import plusIcon from "/assets/images/plus.svg";
@@ -13,7 +14,7 @@ const trending = [
   {
     id: 999,
     title: "한정판 스티커 받았습니다 ㅎㅎ",
-    theme: "None",
+    theme: "NONE",
     writtenBy: {
       nickname: "레어닉",
     },
@@ -25,7 +26,7 @@ const trending = [
   {
     id: 998,
     title: "유저 추천해요",
-    theme: "None",
+    theme: "NONE",
     writtenBy: {
       nickname: "추천",
       profile_image: "/uploads/articles/landscape.jpg",
@@ -38,7 +39,7 @@ const trending = [
   {
     id: 997,
     title: "인텔리제이 테마 추천",
-    theme: "None",
+    theme: "NONE",
     writtenBy: {
       nickname: "정복",
     },
@@ -52,11 +53,17 @@ const trending = [
 function Home() {
   const { goToArticleWrite } = usePageRouter();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFetchArticles();
+  const { themes } = useFetchThemes();
 
   const articles = useMemo(
     () => data?.pages?.flatMap((page) => (page?.result?.articles ? page.result.articles : [])) ?? [],
     [data]
   );
+
+  const themeMap = useMemo(() => {
+    const source = themes?.length ? themes : FALLBACK_THEME_OPTIONS;
+    return new Map(source.map((t) => [t.key, t.label]));
+  }, [themes]);
 
   const loadMoreRef = useIntersectionObserver(
     () => {
@@ -72,7 +79,7 @@ function Home() {
       <main className={styles.container}>
         <section className={styles.articleList}>
           {articles.map((item) => (
-            <ArticleCard key={item.article_id} {...item} />
+            <ArticleCard key={item.article_id} {...item} themeMap={themeMap} />
           ))}
           {hasNextPage && <div ref={loadMoreRef}>Loading...</div>}
           {isFetchingNextPage && <div>Loading...</div>}
@@ -84,7 +91,7 @@ function Home() {
             <h3>인기 게시글</h3>
           </div>
           {trending.map((item) => (
-            <ArticleCard key={item.id} {...item} />
+            <ArticleCard key={item.id} {...item} themeMap={themeMap} />
           ))}
         </section>
       </main>
